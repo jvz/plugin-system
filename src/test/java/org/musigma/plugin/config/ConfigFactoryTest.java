@@ -18,21 +18,19 @@ package org.musigma.plugin.config;
 
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.musigma.plugin.config.jackson.ObjectMapperConfigFactory;
 
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 class ConfigFactoryTest {
 
     @TestFactory
     Stream<DynamicTest> configFactoryProviders() {
-        ServiceLoader<ConfigFactory> serviceLoader = ServiceLoader.load(ConfigFactory.class, ConfigFactory.class.getClassLoader());
-        return StreamSupport.stream(serviceLoader.spliterator(), false)
+        return ConfigFactory.all(ObjectMapperConfigFactory.class.getClassLoader())
                 .flatMap(factory -> factory.supportedFileExtensions().stream().map(extension -> dynamicTest(extension, () -> {
                     ConfigSource source = ConfigSource.fromContextLoader("simple." + extension);
                     Config config = factory.load(source);
