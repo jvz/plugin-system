@@ -41,16 +41,16 @@ public class ConstructorPluginFactory<T> implements PluginFactory<T> {
     }
 
     @Override
-    public T create(final ConfigValue<?> configValue) {
+    public T create(final ConfigValue configValue) {
         if (parameters.length == 0) {
             return newInstance();
         }
         Object[] args = new Object[parameters.length];
         if (configValue.isMap()) {
-            Map<String, ConfigValue<?>> parent = configValue.asMap();
+            Map<String, ConfigValue> parent = configValue.asMap();
             for (int i = 0; i < parameters.length; i++) {
                 Parameter parameter = parameters[i];
-                ConfigValue<?> value = getConfigValue(parameter, parent);
+                ConfigValue value = getConfigValue(parameter, parent);
                 if (value == null) {
                     throw new Todo("Handle optional parameters");
                 } else if (parameter.isAnnotationPresent(Plugin.class)) {
@@ -61,7 +61,7 @@ public class ConstructorPluginFactory<T> implements PluginFactory<T> {
                 }
             }
         } else if (configValue.isList()) {
-            List<ConfigValue<?>> params = configValue.asList();
+            List<ConfigValue> params = configValue.asList();
             throw new Todo("Handle list of arguments");
         } else {
             throw new Todo("Should we accept single arg construction as well?");
@@ -77,7 +77,7 @@ public class ConstructorPluginFactory<T> implements PluginFactory<T> {
         }
     }
 
-    private static ConfigValue<?> getConfigValue(final Parameter param, final Map<String, ConfigValue<?>> parent) {
+    private static ConfigValue getConfigValue(final Parameter param, final Map<String, ConfigValue> parent) {
         if (param.isNamePresent() && parent.containsKey(param.getName())) {
             return parent.get(param.getName());
         }

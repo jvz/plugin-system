@@ -19,5 +19,5 @@ package org.musigma.plugin.factory;
 import org.musigma.plugin.config.ConfigValue;
 
 public interface PluginFactory<T> {
-    T create(ConfigValue<?> configValue);
+    T create(ConfigValue configValue);
 }

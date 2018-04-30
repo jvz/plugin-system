@@ -17,10 +17,9 @@
 package org.musigma.plugin.config;
 
 import java.io.IOException;
-import java.util.Set;
+import java.io.InputStream;
 
-public interface ConfigFactory {
-    Config load(ConfigSource source) throws IOException;
-
-    Set<String> supportedFileExtensions();
+@FunctionalInterface
+public interface InputStreamSource {
+    InputStream open() throws IOException;
 }

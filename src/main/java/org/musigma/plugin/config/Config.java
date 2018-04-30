@@ -21,18 +21,17 @@ import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 public final class Config {
-    private final Map<String, ConfigValue<?>> values;
+    private final Map<String, ConfigValue> values;
 
-    public Config(final Map<String, ConfigValue<?>> values) {
+    public Config(final Map<String, ConfigValue> values) {
         this.values = values;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> ConfigValue<T> get(final String name) {
-        return (ConfigValue<T>) values.get(name);
+    public ConfigValue get(final String name) {
+        return values.get(name);
     }
 
-    public <T> Stream<T> map(final BiFunction<String, ConfigValue<?>, ? extends T> function) {
+    public <T> Stream<T> map(final BiFunction<String, ConfigValue, ? extends T> function) {
         return values.entrySet().stream().map(entry -> function.apply(entry.getKey(), entry.getValue()));
     }
 

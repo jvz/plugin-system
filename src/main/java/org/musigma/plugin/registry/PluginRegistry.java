@@ -21,7 +21,7 @@ import org.musigma.plugin.config.ConfigValue;
 public interface PluginRegistry {
     void add(Class<?> type);
 
-    <T> T create(Class<T> type, ConfigValue<?> configValue);
+    <T> T create(Class<T> type, ConfigValue configValue);
 
-    Object create(String name, ConfigValue<?> configValue);
+    Object create(String name, ConfigValue configValue);
 }

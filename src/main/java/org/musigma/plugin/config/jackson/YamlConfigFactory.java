@@ -18,8 +18,13 @@ package org.musigma.plugin.config.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.musigma.plugin.util.Sets;
+
+import java.util.Set;
 
 public class YamlConfigFactory extends ObjectMapperConfigFactory {
+
+    private static final Set<String> EXTENSIONS = Sets.ofUnmodifiable("yml", "yaml");
 
     private final ObjectMapper mapper = new ObjectMapper(new YAMLFactory()).findAndRegisterModules();
 
@@ -28,4 +33,8 @@ public class YamlConfigFactory extends ObjectMapperConfigFactory {
         return mapper;
     }
 
+    @Override
+    public Set<String> supportedFileExtensions() {
+        return EXTENSIONS;
+    }
 }

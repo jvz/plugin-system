@@ -22,16 +22,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public final class ConfigValue<T> {
+public final class ConfigValue {
 
-    private final T value;
+    private final Object value;
 
-    private ConfigValue(final T value) {
+    private ConfigValue(final Object value) {
         this.value = value;
     }
 
-    public T get() {
+    public Object get() {
         return value;
+    }
+
+    public <T> T getAs(final Class<T> clazz) {
+        return clazz.cast(value);
     }
 
     public boolean isList() {
@@ -39,18 +43,16 @@ public final class ConfigValue<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<ConfigValue<?>> asList() {
-        return (List<ConfigValue<?>>) value;
+    public List<ConfigValue> asList() {
+        return (List<ConfigValue>) value;
     }
 
     // used when this is a List
-    public <U> ConfigValue<U> get(final int idx) {
+    public ConfigValue get(final int idx) {
         if (value == null) {
             throw new NullPointerException();
         } else if (value instanceof List) {
-            @SuppressWarnings("unchecked")
-            ConfigValue<U> value = (ConfigValue<U>) asList().get(idx);
-            return value;
+            return asList().get(idx);
         } else {
             throw new IllegalArgumentException("This does not contain a list. Actual type: " + value.getClass());
         }
@@ -61,18 +63,16 @@ public final class ConfigValue<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, ConfigValue<?>> asMap() {
-        return (Map<String, ConfigValue<?>>) value;
+    public Map<String, ConfigValue> asMap() {
+        return (Map<String, ConfigValue>) value;
     }
 
     // used when this is a Map
-    public <U> ConfigValue<U> get(final String key) {
+    public ConfigValue get(final String key) {
         if (value == null) {
             throw new NullPointerException();
         } else if (value instanceof Map) {
-            @SuppressWarnings("unchecked")
-            ConfigValue<U> value = (ConfigValue<U>) asMap().get(key);
-            return value;
+            return asMap().get(key);
         } else {
             throw new IllegalArgumentException("This does not contain a map. Actual type: " + value.getClass());
         }
@@ -87,7 +87,7 @@ public final class ConfigValue<T> {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final ConfigValue<?> that = (ConfigValue<?>) o;
+        final ConfigValue that = (ConfigValue) o;
         return Objects.equals(value, that.value);
     }
 
@@ -96,7 +96,7 @@ public final class ConfigValue<T> {
         return value == null ? 0 : value.hashCode();
     }
 
-    public static ConfigValue<?> of(Object value) {
+    public static ConfigValue of(Object value) {
         if (value instanceof Map) {
             @SuppressWarnings("unchecked")
             Map<String, ?> m = (Map<String, ?>) value;
@@ -108,19 +108,19 @@ public final class ConfigValue<T> {
         }
     }
 
-    public static <T> ConfigValue<T> ofValue(T value) {
-        return new ConfigValue<>(value);
+    public static ConfigValue ofValue(final Object value) {
+        return new ConfigValue(value);
     }
 
-    public static ConfigValue<Map<String, ConfigValue<?>>> ofMap(Map<String, ?> map) {
-        Map<String, ConfigValue<?>> values = new HashMap<>(map.size());
+    public static ConfigValue ofMap(Map<String, ?> map) {
+        Map<String, ConfigValue> values = new HashMap<>(map.size());
         for (Map.Entry<String, ?> entry : map.entrySet()) {
             values.put(entry.getKey(), of(entry.getValue()));
         }
-        return new ConfigValue<>(values);
+        return new ConfigValue(values);
     }
 
-    public static ConfigValue<List<ConfigValue<?>>> ofList(List<?> list) {
-        return new ConfigValue<>(list.stream().map(ConfigValue::of).collect(Collectors.toList()));
+    public static ConfigValue ofList(List<?> list) {
+        return new ConfigValue(list.stream().map(ConfigValue::of).collect(Collectors.toList()));
     }
 }

@@ -1,0 +1,7 @@
+head:
+  title: "Hello, world!"
+body:
+- div:
+    p: "foo"
+- div:
+    p: "bar"

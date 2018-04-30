@@ -18,8 +18,13 @@ package org.musigma.plugin.config.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory;
+import org.musigma.plugin.util.Sets;
+
+import java.util.Set;
 
 public class PropertiesConfigFactory extends ObjectMapperConfigFactory {
+
+    private static final Set<String> EXTENSIONS = Sets.ofUnmodifiable("properties");
 
     private final ObjectMapper mapper = new ObjectMapper(new JavaPropsFactory()).findAndRegisterModules();
 
@@ -28,4 +33,8 @@ public class PropertiesConfigFactory extends ObjectMapperConfigFactory {
         return mapper;
     }
 
+    @Override
+    public Set<String> supportedFileExtensions() {
+        return EXTENSIONS;
+    }
 }

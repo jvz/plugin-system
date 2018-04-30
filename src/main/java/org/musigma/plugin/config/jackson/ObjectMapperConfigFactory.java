@@ -35,8 +35,8 @@ public abstract class ObjectMapperConfigFactory implements ConfigFactory {
 
     @Override
     public Config load(final ConfigSource source) throws IOException {
-        Map<String, Object> contents = getObjectMapper().readValue(source.read(), MAP_REF);
-        Map<String, ConfigValue<?>> values = new HashMap<>(contents.size());
+        Map<String, Object> contents = getObjectMapper().readValue(source.open(), MAP_REF);
+        Map<String, ConfigValue> values = new HashMap<>(contents.size());
         for (Map.Entry<String, Object> entry : contents.entrySet()) {
             values.put(entry.getKey(), ConfigValue.of(entry.getValue()));
         }

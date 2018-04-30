@@ -24,40 +24,59 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Enumeration;
 
-public interface ConfigSource {
-    static ConfigSource from(final Path path) {
-        return () -> Files.newInputStream(path);
+public final class ConfigSource {
+    private final String filename;
+    private final InputStreamSource source;
+
+    private ConfigSource(final String filename, final InputStreamSource source) {
+        this.filename = filename;
+        this.source = source;
     }
 
-    static ConfigSource from(final File file) {
-        return () -> new FileInputStream(file);
+    public static ConfigSource from(final Path path) {
+        return new ConfigSource(path.getFileName().toString(), () -> Files.newInputStream(path));
     }
 
-    static ConfigSource from(final URI uri) {
+    public static ConfigSource from(final File file) {
+        return new ConfigSource(file.getName(), () -> new FileInputStream(file));
+    }
+
+    public static ConfigSource from(final URI uri) {
         return from(Paths.get(uri));
     }
 
-    static ConfigSource from(final String first, final String... more) {
+    public static ConfigSource from(final String first, final String... more) {
         return from(Paths.get(first, more));
     }
 
-    static ConfigSource fromClassResource(final Class<?> clazz, final String name) {
+    public static ConfigSource fromClassResource(final Class<?> clazz, final String name) {
         return fromClassLoader(clazz.getClassLoader(), name);
     }
 
-    static ConfigSource fromClassLoader(final ClassLoader loader, final String name) {
-        return () -> loader.getResourceAsStream(name);
+    public static ConfigSource fromClassLoader(final ClassLoader loader, final String name) {
+        int lastDirectory = name.lastIndexOf('/');
+        String filename = lastDirectory == -1 ? name : name.substring(lastDirectory + 1);
+        return new ConfigSource(filename, () -> loader.getResourceAsStream(name));
     }
 
-    static ConfigSource fromContextLoader(final String name) throws IOException {
+    public static ConfigSource fromContextLoader(final String name) throws IOException {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources = contextClassLoader.getResources(name);
         if (resources.hasMoreElements()) {
             URL url = resources.nextElement();
-            return url::openStream;
+            String path = url.getPath();
+            int lastDirectory = path.lastIndexOf('/');
+            String filename = lastDirectory == -1 ? path : path.substring(lastDirectory + 1);
+            return new ConfigSource(filename, url::openStream);
         }
         throw new FileNotFoundException(name);
     }
 
-    InputStream read() throws IOException;
+    public InputStream open() throws IOException {
+        return source.open();
+    }
+
+    public String filename() {
+        return filename;
+    }
 }

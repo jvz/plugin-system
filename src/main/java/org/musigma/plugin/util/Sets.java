@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package org.musigma.plugin.config;
+package org.musigma.plugin.util;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
-public interface ConfigFactory {
-    Config load(ConfigSource source) throws IOException;
+public final class Sets {
 
-    Set<String> supportedFileExtensions();
+    @SafeVarargs
+    public static <T> Set<T> ofUnmodifiable(final T... elems) {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(elems)));
+    }
+
+    private Sets() {
+    }
 }

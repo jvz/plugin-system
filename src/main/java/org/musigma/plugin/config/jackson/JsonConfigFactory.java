@@ -17,8 +17,13 @@
 package org.musigma.plugin.config.jackson;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.musigma.plugin.util.Sets;
+
+import java.util.Set;
 
 public class JsonConfigFactory extends ObjectMapperConfigFactory {
+
+    private static final Set<String> EXTENSIONS = Sets.ofUnmodifiable("json");
 
     private final ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
@@ -27,4 +32,8 @@ public class JsonConfigFactory extends ObjectMapperConfigFactory {
         return mapper;
     }
 
+    @Override
+    public Set<String> supportedFileExtensions() {
+        return EXTENSIONS;
+    }
 }
