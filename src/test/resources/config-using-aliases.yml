@@ -1,0 +1,7 @@
+plugins:
+- builder:
+    name: "James Bond"
+    description: "Secret agent"
+- factory:
+    name: "Universe"
+    size: 42
