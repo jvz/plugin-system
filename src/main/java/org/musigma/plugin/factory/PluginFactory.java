@@ -16,8 +16,38 @@
 
 package org.musigma.plugin.factory;
 
+import org.musigma.plugin.annotation.Alias;
+import org.musigma.plugin.annotation.Plugin;
 import org.musigma.plugin.config.ConfigValue;
+import org.musigma.plugin.registry.PluginRegistry;
 
-public interface PluginFactory<T> {
-    T create(ConfigValue configValue);
+import java.lang.reflect.Parameter;
+import java.util.Map;
+import java.util.Optional;
+
+public abstract class PluginFactory<T> {
+    private final PluginRegistry registry;
+
+    protected PluginFactory(final PluginRegistry registry) {
+        this.registry = registry;
+    }
+
+    public abstract T create(ConfigValue configValue);
+
+    protected Optional<Object> getParameterValue(final Parameter parameter, final Map<String, ConfigValue> environment) {
+        return getConfigValue(parameter, environment)
+                .map(value -> parameter.isAnnotationPresent(Plugin.class) ? registry.create(parameter.getType(), value) : value.get());
+    }
+
+    private static Optional<ConfigValue> getConfigValue(final Parameter parameter, final Map<String, ConfigValue> environment) {
+        if (parameter.isNamePresent() && environment.containsKey(parameter.getName())) {
+            return Optional.ofNullable(environment.get(parameter.getName()));
+        }
+        for (Alias alias : parameter.getAnnotationsByType(Alias.class)) {
+            if (environment.containsKey(alias.value())) {
+                return Optional.ofNullable(environment.get(alias.value()));
+            }
+        }
+        return Optional.empty();
+    }
 }

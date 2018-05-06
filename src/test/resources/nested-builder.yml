@@ -1,0 +1,7 @@
+nestedBuilder:
+  name: "World"
+  trivial: {}
+  enabled: true
+  factory:
+    name: "Hello"
+    size: 5

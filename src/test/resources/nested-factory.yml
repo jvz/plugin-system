@@ -1,0 +1,6 @@
+nested:
+  trivial: 0
+  factory:
+    name: "Build Factory"
+    size: 100
+  setting: "something"

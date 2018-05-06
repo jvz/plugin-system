@@ -19,19 +19,21 @@ package org.musigma.plugin.factory;
 import org.musigma.plugin.PluginException;
 import org.musigma.plugin.registry.PluginRegistry;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-public class ConstructorPluginFactory<T> extends ExecutablePluginFactory<T, Constructor<T>> {
-    public ConstructorPluginFactory(final PluginRegistry registry, final Constructor<T> constructor) {
-        super(registry, constructor);
+public class FactoryMethodPluginFactory<T> extends ExecutablePluginFactory<T, Method> {
+
+    public FactoryMethodPluginFactory(final PluginRegistry registry, final Method executable) {
+        super(registry, executable);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    T newInstance(final Object... params) {
+    T newInstance(final Object... args) {
         try {
-            return executable.newInstance(params);
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            return (T) executable.invoke(null, args);
+        } catch (IllegalAccessException | InvocationTargetException e) {
             throw new PluginException(e);
         }
     }

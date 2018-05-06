@@ -1,0 +1,4 @@
+nested:
+  trivial: null
+  cons:
+    line: "Test contents"
