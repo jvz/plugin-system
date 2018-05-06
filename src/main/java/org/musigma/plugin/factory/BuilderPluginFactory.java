@@ -77,15 +77,13 @@ public class BuilderPluginFactory<T> extends PluginFactory<T> {
         if (configValue.isMap()) {
             Map<String, ConfigValue> parent = configValue.asMap();
             for (Method method : methods) {
-                if (method.getDeclaringClass() != Object.class && method.getParameterCount() == 1) {
-                    Parameter parameter = method.getParameters()[0];
-                    Optional<Object> arg = getParameterValue(parameter, parent);
-                    if (arg.isPresent()) {
-                        try {
-                            method.invoke(builder, arg.get());
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            throw new PluginException(e);
-                        }
+                Parameter parameter = method.getParameters()[0];
+                Optional<Object> arg = getParameterValue(parameter, parent);
+                if (arg.isPresent()) {
+                    try {
+                        method.invoke(builder, arg.get());
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new PluginException(e);
                     }
                 }
             }
