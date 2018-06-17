@@ -16,22 +16,20 @@
 
 package org.musigma.plugin.jackson.config;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.musigma.plugin.api.config.ConfigFactory;
-import org.musigma.plugin.api.config.ConfigNode;
-import org.musigma.plugin.api.config.ConfigSource;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.musigma.plugin.api.type.TypeRef;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
 
-abstract class JacksonConfigFactory implements ConfigFactory {
+class TypeReferenceAdapter<T> extends TypeReference<T> {
+    private final TypeRef<T> ref;
 
-    abstract ObjectMapper getObjectMapper();
-
-    @Override
-    public ConfigNode load(final ConfigSource source) throws IOException {
-        JsonNode node = getObjectMapper().readTree(source.open());
-        return new JacksonConfigNode(getObjectMapper(), node);
+    TypeReferenceAdapter(final TypeRef<T> ref) {
+        this.ref = ref;
     }
 
+    @Override
+    public Type getType() {
+        return ref.type();
+    }
 }

@@ -17,12 +17,14 @@
 package org.musigma.plugin.core.java.xml;
 
 import org.musigma.plugin.api.config.ConfigNode;
-import org.musigma.plugin.api.config.MissingConfigNode;
+import org.musigma.plugin.api.type.TypeRef;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import static org.musigma.plugin.api.config.MissingConfigNode.MISSING;
 
 public class XmlConfigNode implements ConfigNode {
     private final Node node;
@@ -78,18 +80,28 @@ public class XmlConfigNode implements ConfigNode {
                 return new XmlConfigNode(node);
             }
         }
-        return MissingConfigNode.INSTANCE;
+        return MISSING;
     }
 
     @Override
     public ConfigNode get(final int index) {
-        if (index < 0) return MissingConfigNode.INSTANCE;
+        if (index < 0) return MISSING;
         NodeList children = node.getChildNodes();
-        return index < children.getLength() ? new XmlConfigNode(children.item(index)) : MissingConfigNode.INSTANCE;
+        return index < children.getLength() ? new XmlConfigNode(children.item(index)) : MISSING;
     }
 
     @Override
     public Object get() {
         return node.getNodeValue();
+    }
+
+    @Override
+    public <T> T getAs(final Class<T> clazz) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> T getAs(final TypeRef<T> ref) {
+        throw new UnsupportedOperationException();
     }
 }

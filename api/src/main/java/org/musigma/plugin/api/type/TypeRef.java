@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.musigma.plugin.core.java.type;
+package org.musigma.plugin.api.type;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

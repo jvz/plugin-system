@@ -25,13 +25,31 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>plugin-core-java</artifactId>
+    <artifactId>plugin-tests</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>org.musigma</groupId>
             <artifactId>plugin-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.musigma</groupId>
+            <artifactId>plugin-api</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.musigma</groupId>
+            <artifactId>plugin-core-java</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.musigma</groupId>
+            <artifactId>plugin-config-jackson</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

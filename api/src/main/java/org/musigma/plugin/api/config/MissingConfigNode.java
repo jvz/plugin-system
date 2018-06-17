@@ -16,10 +16,12 @@
 
 package org.musigma.plugin.api.config;
 
+import org.musigma.plugin.api.type.TypeRef;
+
 import java.util.NoSuchElementException;
 
 public enum MissingConfigNode implements ConfigNode {
-    INSTANCE;
+    MISSING;
 
     @Override
     public int size() {
@@ -58,16 +60,26 @@ public enum MissingConfigNode implements ConfigNode {
 
     @Override
     public ConfigNode get(final String key) {
-        return INSTANCE;
+        return MISSING;
     }
 
     @Override
     public ConfigNode get(final int index) {
-        return INSTANCE;
+        return MISSING;
     }
 
     @Override
     public Object get() {
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public <T> T getAs(final Class<T> clazz) {
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public <T> T getAs(final TypeRef<T> ref) {
         throw new NoSuchElementException();
     }
 }

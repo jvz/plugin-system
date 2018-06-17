@@ -20,10 +20,11 @@ import org.musigma.plugin.api.Todo;
 import org.musigma.plugin.api.annotation.Alias;
 import org.musigma.plugin.api.annotation.Plugin;
 import org.musigma.plugin.api.config.ConfigNode;
-import org.musigma.plugin.api.config.MissingConfigNode;
 import org.musigma.plugin.api.registry.PluginRegistry;
 
 import java.lang.reflect.Parameter;
+
+import static org.musigma.plugin.api.config.MissingConfigNode.MISSING;
 
 public final class Parameters {
 
@@ -36,7 +37,7 @@ public final class Parameters {
                 return node.get(alias.value());
             }
         }
-        return MissingConfigNode.INSTANCE;
+        return MISSING;
     }
 
     public static Object createPlugin(final PluginRegistry registry, final ConfigNode node, final Parameter param) {

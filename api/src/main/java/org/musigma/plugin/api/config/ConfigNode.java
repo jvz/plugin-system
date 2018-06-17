@@ -16,6 +16,8 @@
 
 package org.musigma.plugin.api.config;
 
+import org.musigma.plugin.api.type.TypeRef;
+
 public interface ConfigNode {
     int size();
 
@@ -37,16 +39,8 @@ public interface ConfigNode {
 
     Object get();
 
-//    default ConfigNode get(final Parameter parameter) {
-//        if (parameter.isNamePresent() && hasKey(parameter.getName())) {
-//            return get(parameter.getName());
-//        }
-//        for (Alias alias : parameter.getAnnotationsByType(Alias.class)) {
-//            if (hasKey(alias.value())) {
-//                return get(alias.value());
-//            }
-//        }
-//        return MissingConfigNode.INSTANCE;
-//    }
+    <T> T getAs(Class<T> clazz);
+
+    <T> T getAs(TypeRef<T> ref);
 
 }

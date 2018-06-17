@@ -77,9 +77,8 @@ public class BuilderPluginFactory<T> implements PluginFactory<T> {
         if (node.isRecord()) {
             for (Method method : methods) {
                 Parameter parameter = method.getParameters()[0];
-                ConfigNode arg = Parameters.getConfig(node, parameter);
-                if (!arg.isMissingNode()) {
-                    Object value = Parameters.createPlugin(registry, arg, parameter);
+                Object value = Parameters.createPlugin(registry, node, parameter);
+                if (value != null) {
                     try {
                         method.invoke(builder, value);
                     } catch (Throwable e) {
